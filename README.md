@@ -54,3 +54,25 @@ write again same thing but load address of input in a1
 then exit program successfully with 93 syscall with value of 2
 
 use riscv64-linux-gnu-objdump -d hello to check address produced. in my code since my program is global (with .global keyword) i use a variable called gp (for global pointer) but never really init it. So after the linking/assembling i get the addresses for s and input as something like "gp + (-2028) = 0xfffff814) meaning it injected garbage and that way the address are invalid. So to solve this we can either prevent the assembler/linker from generating gp-relative accesses, or init the gp before using any data symbol: i chose to prevent the use of it by deactivating linker relaxation using the directive: .option norelax at the begining of my program    
+
+---   
+## Notes from addition lab
+
+load immediate values
+then call the add additioner and store it in a5 register.
+after that convert the byte to ascii
+then store the content of the register into a var 
+then trigger write syscall
+
+we convert using addi reg1, reg1, 48 (to add imm value +48 pour tomber sur les chiffres en ascii)
+
+/*For case of input from keyboard then additionning*/
+We need to convert them back to digits since we input them as ascii characters, then reconvert, so we do:
+//Apres le read de x ou y
+la t0, x
+lb a3, 0(t0) //le premier elemn de t0
+addi a3, a3, -48 (pour tomber sur les digits)
+then after additionning: add a5, a3, a4
+we reconvert: 
+addi a5, a5, 48
+
